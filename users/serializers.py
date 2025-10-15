@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from phonenumber_field.serializerfields import PhoneNumberField
-from .models import UserProfile, Inmobiliaria
+from .models import UserProfile
 
 User = get_user_model()
 
@@ -313,11 +313,12 @@ class UserRoleAssignmentSerializer(serializers.Serializer):
                     f'El usuario no tiene el rol "{role.name}" asignado.'
                 )
 
-
+#movido a otra app
+"""
 class InmobiliariaSerializer(serializers.ModelSerializer):
-    """
-    Serializer para el modelo Inmobiliaria.
-    """
+  
+    #Serializer para el modelo Inmobiliaria.
+
     direccion_completa = serializers.ReadOnlyField()
     telefono = PhoneNumberField(required=True)
 
@@ -356,26 +357,26 @@ class InmobiliariaSerializer(serializers.ModelSerializer):
         }
 
     def validate_email(self, value):
-        """
-        Validar formato de email.
-        """
+
+        #Validar formato de email.
+
         if not value:
             raise serializers.ValidationError('El email es requerido.')
         return value.lower()
 
     def validate_sitio_web(self, value):
-        """
-        Validar y normalizar URL del sitio web.
-        """
+  
+        #Validar y normalizar URL del sitio web.
+
         if value and not value.startswith(('http://', 'https://')):
             value = f'https://{value}'
         return value
 
 
 class InmobiliariaCreateSerializer(serializers.ModelSerializer):
-    """
-    Serializer para crear una nueva inmobiliaria.
-    """
+    
+    #Serializer para crear una nueva inmobiliaria.
+    
     telefono = PhoneNumberField(required=True)
 
     class Meta:
@@ -410,9 +411,9 @@ class InmobiliariaCreateSerializer(serializers.ModelSerializer):
         }
 
     def validate_email(self, value):
-        """
-        Validar formato de email y unicidad.
-        """
+        
+        #Validar formato de email y unicidad.
+        
         if not value:
             raise serializers.ValidationError('El email es requerido.')
         
@@ -423,20 +424,20 @@ class InmobiliariaCreateSerializer(serializers.ModelSerializer):
         return value.lower()
 
     def validate_sitio_web(self, value):
-        """
-        Validar y normalizar URL del sitio web.
-        """
+        
+        #Validar y normalizar URL del sitio web.
+        
         if value and not value.startswith(('http://', 'https://')):
             value = f'https://{value}'
         return value
 
     def create(self, validated_data):
-        """
-        Crear una nueva inmobiliaria.
-        """
+        
+        #Crear una nueva inmobiliaria.
+        
         inmobiliaria = Inmobiliaria.objects.create(**validated_data)
         return inmobiliaria
-
+"""
 
 class UserPortalProfileSerializer(serializers.ModelSerializer):
     """

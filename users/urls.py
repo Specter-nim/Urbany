@@ -5,7 +5,6 @@ from .views import (
     UserProfileView,
     PasswordChangeView,
     UserStatsView,
-    InmobiliariaRegistrationView,
     UserProfileUpdateView,
     UserProfilePhotoUploadView,
     UserPortalProfileView

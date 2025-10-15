@@ -82,6 +82,11 @@ urlpatterns = [
     path('api/schema/', schema_view.without_ui(cache_timeout=0), name='api-schema'),
     path('api/docs/', schema_view.with_ui('swagger', cache_timeout=0), name='api-docs'),
     path('api/redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='api-redoc'),
+
+    # Properties
+    path('api/properties/', include('properties.urls')),
+    # inmobiliaria
+    path('api/inmobiliaria/', include('inmobiliaria.urls')),
 ]
 
 # Serve media files during development

@@ -8,7 +8,7 @@ from .views import (
     TwoFactorAuthView,
     health_check
 )
-from users.views import InmobiliariaRegistrationView
+#from users.views import InmobiliariaRegistrationView
 
 app_name = 'auth'
 
@@ -22,7 +22,7 @@ urlpatterns = [
     path('two-factor/', TwoFactorAuthView.as_view(), name='two_factor_auth'),
     
     # HU02: Inmobiliaria registration endpoint
-    path('register-inmobiliaria/', InmobiliariaRegistrationView.as_view(), name='register_inmobiliaria'),
+    #path('register-inmobiliaria/', InmobiliariaRegistrationView.as_view(), name='register_inmobiliaria'),
     
     # Health check endpoint
     path('health/', health_check, name='health_check'),

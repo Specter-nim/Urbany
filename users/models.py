@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.translation import gettext_lazy as _
+from inmobiliaria.models import Inmobiliaria
 
 
 class UserManager(BaseUserManager):
@@ -85,6 +86,7 @@ class UserProfile(models.Model):
         related_name='profile',
         verbose_name=_('user')
     )
+    id_inmobiliaria = models.ForeignKey(Inmobiliaria, on_delete=models.CASCADE, blank=True, null=True)
     phone_number = PhoneNumberField(
         _('phone number'),
         blank=True,
@@ -153,12 +155,9 @@ def save_user_profile(sender, instance, **kwargs):
     if hasattr(instance, 'profile'):
         instance.profile.save()
 
-
+"""
 class Inmobiliaria(models.Model):
-    """
-    Modelo para representar una inmobiliaria en el sistema CRM URBANY.
-    Contiene la información corporativa necesaria para el registro.
-    """
+
     nombre = models.CharField(
         _('nombre'),
         max_length=200,
@@ -240,9 +239,8 @@ class Inmobiliaria(models.Model):
 
     @property
     def direccion_completa(self):
-        """
-        Retorna la dirección completa concatenada.
-        """
+
         partes = [self.direccion, self.ciudad, self.pais, self.codigo_postal]
         return ', '.join(filter(None, partes))
 
+"""

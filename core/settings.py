@@ -55,6 +55,9 @@ INSTALLED_APPS = [
     'authentication',  # Renamed from 'auth' to avoid conflict with django.contrib.auth
     'users',
     'roles',
+
+    'properties',
+    'inmobiliaria',
     
     # Módulo 4: Redes Inmobiliarias y Colaboración
     'networks',

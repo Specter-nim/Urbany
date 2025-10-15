@@ -10,7 +10,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from datetime import datetime
 
-from .models import UserProfile, Inmobiliaria
+from .models import UserProfile
 from .serializers import (
     UserDetailSerializer,
     UserListSerializer,
@@ -20,8 +20,6 @@ from .serializers import (
     UserProfileUpdateSerializer,
     PasswordChangeSerializer,
     UserRoleAssignmentSerializer,
-    InmobiliariaSerializer,
-    InmobiliariaCreateSerializer,
     UserPortalProfileSerializer
 )
 
@@ -394,11 +392,11 @@ class UserStatsView(APIView):
             'statistics_date': datetime.now().isoformat()
         })
 
-
+"""
 class InmobiliariaRegistrationView(APIView):
-    """
-    Vista para el registro de inmobiliarias en el CRM URBANY.
-    """
+    
+    #Vista para el registro de inmobiliarias en el CRM URBANY.
+    
     permission_classes = [permissions.AllowAny]
 
     @swagger_auto_schema(
@@ -425,9 +423,9 @@ class InmobiliariaRegistrationView(APIView):
         tags=['Inmobiliarias']
     )
     def post(self, request):
-        """
-        Registrar una nueva inmobiliaria.
-        """
+        
+        #Registrar una nueva inmobiliaria.
+        
         serializer = InmobiliariaCreateSerializer(data=request.data)
         
         if serializer.is_valid():
@@ -450,7 +448,7 @@ class InmobiliariaRegistrationView(APIView):
             'error': 'Datos inválidos',
             'details': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
-
+"""
 
 class UserProfileUpdateView(APIView):
     """

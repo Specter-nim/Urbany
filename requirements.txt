@@ -1,38 +1,38 @@
 # Dependencias principales
-Django==4.2.7
-djangorestframework==3.14.0
-psycopg2-binary==2.9.9
-Pillow==10.1.0
+Django
+djangorestframework
+psycopg2-binary
+Pillow
 
 # Autenticación y seguridad
-djangorestframework-simplejwt==5.3.0
-django-cors-headers==4.3.0
-python-decouple==1.0.0
+djangorestframework-simplejwt
+django-cors-headers
+python-decouple
 
 # Comunicación y tareas asíncronas
-celery==5.3.4
-redis==5.0.1
-django-celery-beat==2.5.0
+celery
+redis
+django-celery-beat
 
 # Integraciones
-requests==2.31.0
+requests
 
 # Tiempo real
-channels==4.0.0
-daphne==4.0.0
+channels
+daphne
 
 # Documentación API
-drf-yasg==1.21.7
+drf-yasg
 
 # Desarrollo y pruebas
-pytest==7.4.3
-pytest-django==4.7.0
-coverage==7.3.2
-factory-boy==3.3.0
+pytest
+pytest-django
+coverage
+factory-boy
 
 # Validación de datos
-django-phonenumber-field==7.2.0
-phonenumbers==8.13.25
+django-phonenumber-field
+phonenumbers
 
 # Filtros y búsqueda
-django-filter==23.5
+django-filter

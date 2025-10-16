@@ -22,7 +22,7 @@ channels
 daphne
 
 # Documentación API
-drf-yasg
+drf-spectacular
 
 # Desarrollo y pruebas
 pytest

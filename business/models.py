@@ -5,6 +5,7 @@ from django.db.models import Q
 
 from contacts.models import Contact, Label
 from properties.models import Propiedad
+from inmobiliaria.models import Inmobiliaria
 
 User = get_user_model()
 
@@ -45,6 +46,8 @@ class Business(models.Model):
     contacto = models.ForeignKey(Contact, on_delete=models.CASCADE, related_name='negocios')
     propiedad = models.ForeignKey(Propiedad, on_delete=models.SET_NULL, null=True, blank=True, related_name='negocios')
     agente = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='negocios')
+    #se elimina la inmobiliaria, los negocios asociados se eliminarán también
+    inmobiliaria = models.ForeignKey(Inmobiliaria, on_delete=models.CASCADE, related_name='negocios')
 
     etapa = models.CharField(max_length=32, choices=ETAPA_CHOICES, default=ETAPA_NUEVO)
     estado = models.CharField(max_length=16, choices=ESTADO_CHOICES, default=ESTADO_ABIERTO)

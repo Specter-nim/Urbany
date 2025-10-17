@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from properties.models import Propiedad
+from inmobiliaria.models import Inmobiliaria
 
 User = get_user_model()
 
@@ -29,6 +30,8 @@ class Contact(models.Model):
     tipo = models.CharField(max_length=20, choices=CONTACT_TYPE_CHOICES)
     agente = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='contactos')
     propiedades = models.ManyToManyField(Propiedad, blank=True, related_name='contactos')
+    #si se elimina una inmobiliaria, los contactos asociados se eliminarán también
+    inmobiliaria = models.ForeignKey(Inmobiliaria, on_delete=models.CASCADE)
     etiquetas = models.ManyToManyField(Label, blank=True, related_name='contactos')
     fecha_creacion = models.DateTimeField(default=timezone.now)
     fecha_actualizacion = models.DateTimeField(default=timezone.now)

@@ -80,6 +80,10 @@ urlpatterns = [
     path('api/properties/', include('properties.urls')),
     # inmobiliaria
     path('api/inmobiliaria/', include('inmobiliaria.urls')),
+    # Contacts
+    path('api/', include('contacts.urls')),
+    # Business
+    path('api/negocios/', include('business.urls')),
 ]
 
 # Serve media files during development

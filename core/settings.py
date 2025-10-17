@@ -59,6 +59,9 @@ INSTALLED_APPS = [
     'properties',
     'inmobiliaria',
     
+    'business',
+    'contacts',
+
     # Módulo 4: Redes Inmobiliarias y Colaboración
     'networks',
     'invitations',

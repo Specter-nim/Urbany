@@ -285,8 +285,12 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_roles(self, obj):
         """Get user roles."""
-        return [role.name for role in obj.get_roles()]
+        # Use Django groups as roles; return their names
+        return [group.name for group in obj.groups.all()]
 
     def get_permissions(self, obj):
         """Get user permissions."""
-        return [perm.codename for perm in obj.get_permissions()]
+        # Combine direct and group permissions; return codenames
+        # get_all_permissions returns strings like 'app_label.codename'
+        perms = obj.get_all_permissions()
+        return [p.split('.', 1)[-1] for p in perms]

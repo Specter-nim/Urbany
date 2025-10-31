@@ -42,6 +42,18 @@ urlpatterns = [
         permission_classes=[AllowAny],
         authentication_classes=[SessionAuthentication]
     ), name='redoc'),
+
+    # Aliases para coincidir con README y accesibilidad directa
+    path('api/docs/', SpectacularSwaggerView.as_view(
+        url_name='schema',
+        permission_classes=[AllowAny],
+        authentication_classes=[SessionAuthentication]
+    ), name='api-docs'),
+    path('api/redoc/', SpectacularRedocView.as_view(
+        url_name='schema',
+        permission_classes=[AllowAny],
+        authentication_classes=[SessionAuthentication]
+    ), name='api-redoc'),
     
     # API endpoints
     path('api/', include('rest_framework.urls')),

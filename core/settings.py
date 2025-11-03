@@ -337,6 +337,9 @@ EMAIL_HOST_PASSWORD = ''
 
 # Phone Number Field Configuration
 PHONENUMBER_DEFAULT_REGION = 'MX'
+
+# Urbany App Token (para integraciones/servicios internos)
+URBANY_TOKEN = config('URBANY_TOKEN', default=None)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=False, cast=bool)
 SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=False, cast=bool)

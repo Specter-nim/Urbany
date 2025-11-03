@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-set -e
+set -eu
 
 echo "[entrypoint] Esperando servicios dependientes..."
 
@@ -18,8 +18,12 @@ until nc -z "${REDIS_HOST}" "${REDIS_PORT}"; do
 done
 
 echo "[entrypoint] Aplicando migraciones y collectstatic..."
-python manage.py migrate --noinput
-python manage.py collectstatic --noinput
+if ! python manage.py migrate --noinput; then
+  echo "[entrypoint] WARNING: migrate falló, continuando sin bloquear el arranque"
+fi
+if ! python manage.py collectstatic --noinput; then
+  echo "[entrypoint] WARNING: collectstatic falló, continuando"
+fi
 
 echo "[entrypoint] Iniciando aplicación: $@"
 exec "$@"

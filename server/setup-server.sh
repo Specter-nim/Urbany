@@ -3,10 +3,13 @@ set -euo pipefail
 
 # Este script debe ejecutarse como root en el servidor (Ubuntu/Debian).
 # Prepara firewall (UFW), fail2ban, actualizaciones automáticas, crea usuario admin,
+# instala Docker + Compose, crea directorios de despliegue y backup,
 # y deja listo el entorno para configurar 2FA con Google Authenticator.
 
 SSH_PORT=${SSH_PORT:-22}
 ADMIN_USER=${ADMIN_USER:-deploy}
+APP_DIR=${APP_DIR:-/opt/urbany}
+BACKUP_DIR=${BACKUP_DIR:-/var/backups/urbany}
 
 if [[ $EUID -ne 0 ]]; then
   echo "[ERROR] Debe ejecutar este script como root" >&2
@@ -86,10 +89,22 @@ if ! grep -q 'pam_google_authenticator.so' "$PAM_SSHD"; then
   sed -i '1i auth required pam_google_authenticator.so nullok' "$PAM_SSHD"
 fi
 
+echo "[setup] Instalando Docker y Compose..."
+curl -fsSL https://get.docker.com | sh
+usermod -aG docker "${ADMIN_USER}"
+systemctl enable --now docker
+docker --version || true
+docker compose version || true
+
+echo "[setup] Creando estructura de directorios para app y backups..."
+mkdir -p "${APP_DIR}/docker" "${APP_DIR}/dist" "${BACKUP_DIR}"
+chmod 750 "${APP_DIR}" "${BACKUP_DIR}"
+
 echo "[setup] Endurecimiento básico completado. Próximos pasos manuales:"
 echo "  1) Establecer contraseña segura para root: passwd root"
 echo "  2) Inicializar 2FA para cada usuario admin: su - ${ADMIN_USER} -c google-authenticator"
 echo "  3) (Opcional) Requerir 2FA + clave pública: habilitar AuthenticationMethods en sshd_config"
 echo "  4) Probar conectividad SSH, firewall y fail2ban"
+echo "  5) Copiar compose y archivos de la app a ${APP_DIR} y levantar con Docker Compose"
 
 echo "[setup] Done."

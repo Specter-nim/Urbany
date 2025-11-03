@@ -43,6 +43,8 @@ ADMIN_USER=deploy SSH_PORT=22 /root/setup-server.sh
   - Crea usuario admin `deploy` y prepara su directorio `.ssh`.
   - Ajusta `sshd_config` para permitir PAM y teclado interactivo (necesario para 2FA), y limita el login de root.
   - Prepara PAM para Google Authenticator (`libpam-google-authenticator`) con `nullok` inicial.
+  - Instala Docker y Docker Compose plugin, habilita el servicio y añade `deploy` al grupo `docker`.
+  - Crea estructura de directorios: `/opt/urbany` (app), `/var/backups/urbany` (backups).
 
 ## 5. Configuración de 2FA (Google Authenticator)
 
@@ -120,3 +122,31 @@ google-authenticator
 - [ ] fail2ban protegiendo SSH.
 - [ ] 2FA operativo para usuarios admin.
 - [ ] Documentación de cambios almacenada.
+
+## 13. Despliegue y Automatización (systemd)
+
+- Copie los archivos preparados en el repositorio al servidor:
+  - `scp Urbany/server/urbany.service root@178.156.143.222:/etc/systemd/system/`
+  - `scp Urbany/server/manage-urbany.sh root@178.156.143.222:/usr/local/bin/manage-urbany.sh && chmod +x /usr/local/bin/manage-urbany.sh`
+- Habilite la unidad:
+  - `systemctl daemon-reload`
+  - `systemctl enable urbany.service`
+  - `systemctl start urbany.service`
+- Gestión:
+  - `systemctl status urbany.service`
+  - `manage-urbany.sh ps` / `manage-urbany.sh logs`
+
+## 14. Backups
+
+- Instale el script:
+  - `scp Urbany/server/backup.sh root@178.156.143.222:/usr/local/bin/backup-urbany.sh && chmod +x /usr/local/bin/backup-urbany.sh`
+- Configure cron (ejemplo diario 02:00):
+  - `echo "0 2 * * * root /usr/local/bin/backup-urbany.sh" > /etc/cron.d/urbany-backup`
+- Verifique que los archivos aparezcan en `/var/backups/urbany`.
+
+## 15. Monitoreo y Logs
+
+- Nginx: `/var/log/nginx/access.log`, `/var/log/nginx/error.log`
+- Docker Compose (app): `docker compose -f /opt/urbany/docker-compose.prod.yml logs -f`
+- Django/DRF: logs en consola del contenedor `web` según `LOGGING` de `settings.py`.
+- Recomendado: integrar Prometheus/Grafana y alertas si el proyecto lo requiere.

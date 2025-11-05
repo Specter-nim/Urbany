@@ -1,8 +1,8 @@
 # Dependencias principales
 Django==4.2.7
 djangorestframework==3.14.0
-psycopg2-binary==2.9.9
-Pillow==10.1.0
+psycopg2-binary==2.9.11
+Pillow==10.4.0
 
 # Autenticación y seguridad
 djangorestframework-simplejwt==5.3.0
@@ -28,7 +28,7 @@ drf-spectacular==0.26.5
 # Desarrollo y pruebas
 pytest==7.4.3
 pytest-django==4.7.0
-coverage==7.3.2
+coverage==7.11.0
 factory-boy==3.3.0
 
 # Validación de datos

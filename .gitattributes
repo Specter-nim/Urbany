@@ -1,0 +1,30 @@
+# Normalización de finales de línea y tipos de archivo
+
+# Por defecto, normaliza a LF en el repositorio
+* text eol=lf
+
+# Archivos Unix (scripts y configuración)
+*.sh   text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+*.conf text eol=lf
+*.py   text eol=lf
+*.md   text eol=lf
+*.json text eol=lf
+
+# Scripts de Windows conservan CRLF
+*.ps1  text eol=crlf
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+
+# Binarios y artefactos (no tocar EOL)
+*.exe  binary
+*.dll  binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.pdf  binary
+*.zip  binary
+*.gz   binary
+*.tar  binary

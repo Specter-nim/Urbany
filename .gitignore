@@ -155,6 +155,10 @@ dump.rdb
 ehthumbs.db
 Thumbs.db
 
+# Herramientas locales y binarios
+tools/
+*.exe
+
 # Node.js (if using frontend tools)
 node_modules/
 npm-debug.log*
@@ -170,3 +174,8 @@ migrations/
 # Ignore all migration files
 */migrations/*.py
 !*/migrations/__init__.py
+
+# Archivos generados en despliegues
+ACCESO_FRONTEND.md
+deployments.log
+automation.log

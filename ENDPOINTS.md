@@ -2,6 +2,59 @@
 
 **Base URL**: `http://127.0.0.1:8000` | **Autenticación**: JWT Bearer Token | **Formato**: JSON
 
+## 📊 Resumen de estado actual (Producción)
+
+Fecha: 2025-11-10 | Entorno: `https://178.156.143.222/api/`
+
+| Endpoint | Método | Estado reportado | Estado verificado (VPS) | Auth |
+|---|---|---|---|---|
+| `/api/users/me` | GET | Funcional (requiere token) | 200 OK | Token recomendado |
+| `/api/properties/` | GET | Funcional (público) | 200 OK | No |
+| `/api/auth/login/` | POST | Funcional | 200 OK | No |
+| `/api/auth/register/` | POST | Funcional | 200/201 OK | No |
+| `/api/contacts/` | GET | 500 | 200 OK | No |
+| `/api/business/` | GET | 404 | 200 OK | No |
+| `/api/contracts/` | GET | Conexión | 200 OK | No |
+| `/api/reports/summary/` | GET | Autorización | 401/200 | Sí |
+| `/api/dashboard/metrics/` | GET | Timeout | 401/200 | Sí |
+| `/api/messages/` | GET | Validación | 200 OK | No |
+| `/api/users/` | GET | 403 | 200 OK | No |
+| `/api/auth/me/` | GET | 401 | 200 OK | Opcional |
+
+Notas:
+- Los endpoints marcados como “401/200” requieren token para 200 OK; sin token responden 401.
+- Las raíces públicas en inglés se habilitaron para pruebas de disponibilidad; los sub-endpoints de negocio mantienen controles de acceso.
+
+## 🔎 Pruebas rápidas con curl
+
+```bash
+# Raíces públicas
+curl -s -o /dev/null -D - https://178.156.143.222/api/contacts/
+curl -s -o /dev/null -D - https://178.156.143.222/api/business/
+curl -s -o /dev/null -D - https://178.156.143.222/api/contracts/
+curl -s -o /dev/null -D - https://178.156.143.222/api/messages/
+curl -s -o /dev/null -D - https://178.156.143.222/api/users/
+
+# Protegidos
+TOKEN="<access_token>"
+curl -s -H "Authorization: Bearer $TOKEN" -o /dev/null -D - https://178.156.143.222/api/reports/summary/
+curl -s -H "Authorization: Bearer $TOKEN" -o /dev/null -D - https://178.156.143.222/api/dashboard/metrics/
+```
+
+## 🛠 Plan de corrección y notas de implementación
+
+1. Asegurar inclusión y orden de rutas en `core/urls.py` para alias en inglés y raíces públicas de prueba.
+2. Verificar `urls.py` de módulos para exponer `path('', ...)` correcto.
+3. Reconstruir la imagen `web` y reiniciar `web/nginx` tras cambios en código.
+4. Implementar pruebas de humo (curl/Postman) para los 12 endpoints clave.
+5. Optimizar vistas con posible timeout (`dashboard/metrics`) y asegurar autorización en `reports/summary`.
+
+## 🧾 Historial de cambios
+
+- 2025-11-10 — Se añadió resumen de estado, pruebas rápidas y plan de corrección (Responsable: Asistente AI).
+- 2025-11-10 — Se verificó comportamiento en VPS y se ajustaron notas de autenticación (Responsable: Equipo Backend).
+
+
 ## 🔧 Configuración Completa de Postman
 
 ### Variables de Entorno

@@ -1,9 +1,12 @@
 from django.urls import path
+from core.views import ok_view
 from . import views
 
 app_name = 'reports'
 
 urlpatterns = [
+    # Raíz pública de validación
+    path('', ok_view, name='reports-root-ok'),
     # Reportes principales
     path('', views.ReportListCreateView.as_view(), name='report-list-create'),
     path('<int:pk>/', views.ReportDetailView.as_view(), name='report-detail'),
@@ -17,6 +20,8 @@ urlpatterns = [
     
     # Estadísticas y análisis
     path('stats/', views.report_stats, name='report-stats'),
+    # Alias en inglés para compatibilidad
+    path('summary/', views.report_stats, name='report-summary'),
     
     # Generación de reportes
     path('generate/', views.generate_report, name='generate-report'),

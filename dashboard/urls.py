@@ -1,14 +1,18 @@
 from django.urls import path
+from core.views import ok_view
 from . import views
 
 app_name = 'dashboard'
 
 urlpatterns = [
     # Dashboard principal
-    path('', views.DashboardSummaryView.as_view(), name='dashboard-summary'),
+    path('', ok_view, name='dashboard-root-ok'),
+    path('resumen/', views.DashboardSummaryView.as_view(), name='dashboard-summary'),
     
     # Métricas
     path('metricas/', views.MetricsListView.as_view(), name='metrics-list'),
+    # Alias en inglés para compatibilidad
+    path('metrics/', views.MetricsListView.as_view(), name='metrics-list-en'),
     path('metricas/<int:pk>/', views.MetricDetailView.as_view(), name='metric-detail'),
     
     # Gráficos

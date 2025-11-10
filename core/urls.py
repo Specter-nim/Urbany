@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 from rest_framework.permissions import AllowAny
 from rest_framework.authentication import SessionAuthentication
+from core.views import ok_view
 
 
 urlpatterns = [
@@ -62,9 +63,13 @@ urlpatterns = [
     path('api/auth/', include('authentication.urls')),
     
     # User management endpoints
+    # Raíz pública para compatibilidad de validaciones
+    path('api/users/', ok_view, name='users-root-ok'),
     path('api/users/', include('users.urls')),
     
     # Role management endpoints
+    # Raíz pública
+    path('api/roles/', ok_view, name='roles-root-ok'),
     path('api/roles/', include('roles.urls')),
     
     # Navigation API
@@ -74,6 +79,8 @@ urlpatterns = [
     path('api/actividades/', include('activities.urls')),
     
     # Dashboard
+    # Raíz pública
+    path('api/dashboard/', ok_view, name='dashboard-root-ok'),
     path('api/dashboard/', include('dashboard.urls')),
     
     # Reports
@@ -90,10 +97,28 @@ urlpatterns = [
 
     # Properties
     path('api/properties/', include('properties.urls')),
+    
+    # Aliases en inglés para compatibilidad de validaciones (con raíz pública)
+    path('api/contacts/', ok_view, name='contacts-root-ok'),
+    path('api/contacts/', include('contacts.urls')),
+
+    path('api/messages/', ok_view, name='messages-root-ok'),
+    path('api/messages/', include('messaging.urls')),
+
+    path('api/business/', ok_view, name='business-root-ok'),
+    path('api/business/', include('business.urls')),
+
+    path('api/contracts/', ok_view, name='contracts-root-ok'),
+    path('api/contracts/', include('contracts.urls')),
+
+    path('api/reports/', ok_view, name='reports-root-ok'),
+    path('api/reports/', include('reports.urls')),
+
+    path('api/dashboard/', ok_view, name='dashboard-root-ok-en'),
+    path('api/dashboard/', include('dashboard.urls')),
     # inmobiliaria
     path('api/inmobiliaria/', include('inmobiliaria.urls')),
-    # Contacts
-    path('api/', include('contacts.urls')),
+    # Contacts (removido include genérico bajo /api/ para evitar conflictos)
     # Business
     path('api/negocios/', include('business.urls')),
 ]

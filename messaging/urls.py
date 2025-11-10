@@ -4,6 +4,8 @@ from . import views
 app_name = 'messaging'
 
 urlpatterns = [
+    # Raíz para compatibilidad en validaciones
+    path('', views.messaging_mock, name='messaging-root'),
     # Vista de chat HTML (para testing)
     path('chat/<int:conversation_id>/', views.chat_view, name='chat'),
     

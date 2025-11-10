@@ -44,7 +44,7 @@ ENV REDIS_HOST=redis \
 
 # Copia entrypoint
 COPY docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+RUN chmod 755 /entrypoint.sh && chown appuser:appuser /entrypoint.sh
 
 USER appuser
 

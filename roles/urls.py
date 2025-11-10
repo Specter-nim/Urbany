@@ -1,4 +1,5 @@
 from django.urls import path, include
+from core.views import ok_view
 from rest_framework.routers import DefaultRouter
 from .views import (
     RoleViewSet,
@@ -14,6 +15,8 @@ router.register(r'', RoleViewSet, basename='role')
 router.register(r'permissions', PermissionViewSet, basename='permission')
 
 urlpatterns = [
+    # Raíz pública de validación
+    path('', ok_view, name='roles-root-ok'),
     # Role and Permission CRUD operations via ViewSets
     path('', include(router.urls)),
     

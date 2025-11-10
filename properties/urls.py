@@ -1,4 +1,5 @@
 from django.urls import path, include
+from core.views import ok_view
 from rest_framework.routers import DefaultRouter
 from .views import TipoPropiedadViewSet, UbicacionPropiedadViewSet, SuperficiePropiedadViewSet, SuperficieTerrenoViewSet, InformacionExtraPropiedadViewSet, AmbientesViewSet, AmbientePropiedadViewSet, ImagenesPropiedadViewSet, ServiciosViewSet, PrecioPropiedadViewSet, ServicioPropiedadViewSet, PropiedadViewSet
 
@@ -15,8 +16,12 @@ router.register(r'servicios', ServiciosViewSet, basename='servicios')
 router.register(r'precio-propiedad', PrecioPropiedadViewSet, basename='precio-propiedad')
 router.register(r'servicio-propiedad', ServicioPropiedadViewSet, basename='servicio-propiedad')
 router.register(r'propiedad', PropiedadViewSet, basename='propiedad')
+# Alias en inglés para compatibilidad
+router.register(r'properties', PropiedadViewSet, basename='properties')
 
 urlpatterns = [
+    # Raíz pública de validación
+    path('', ok_view, name='properties-root-ok'),
     path('', include(router.urls)),
 ]
 

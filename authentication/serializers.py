@@ -12,12 +12,18 @@ class LoginSerializer(serializers.Serializer):
     """
     Serializer for user login with email and password.
     """
+    # Compatibilidad: aceptar 'email' o 'username' (se mapea a email)
     email = serializers.EmailField(
-        required=True,
+        required=False,
         error_messages={
             'required': 'El email es requerido.',
             'invalid': 'Ingrese un email válido.'
         }
+    )
+    username = serializers.CharField(
+        required=False,
+        allow_blank=True,
+        help_text='Compatibilidad: si se envía username se usará como email.'
     )
     password = serializers.CharField(
         required=True,
@@ -29,7 +35,8 @@ class LoginSerializer(serializers.Serializer):
     )
 
     def validate(self, attrs):
-        email = attrs.get('email')
+        # Aceptar también 'username' como alias de email
+        email = attrs.get('email') or attrs.get('username')
         password = attrs.get('password')
 
         if email and password:
@@ -54,8 +61,14 @@ class LoginSerializer(serializers.Serializer):
             attrs['user'] = user
             return attrs
         else:
+            # Mensaje claro según faltantes
+            missing = []
+            if not attrs.get('email') and not attrs.get('username'):
+                missing.append('email/username')
+            if not attrs.get('password'):
+                missing.append('password')
             raise serializers.ValidationError(
-                'Debe incluir email y contraseña.',
+                f'Debe incluir {" y ".join(missing)}.',
                 code='authorization'
             )
 

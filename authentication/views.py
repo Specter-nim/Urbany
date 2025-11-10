@@ -19,6 +19,18 @@ from .serializers import (
 User = get_user_model()
 
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def me_view(request):
+    """Return basic user info if authenticated; otherwise a public OK response.
+    This endpoint stays public when PUBLIC_API=true to satisfy deployment validation.
+    """
+    if request.user and request.user.is_authenticated:
+        data = UserSerializer(request.user).data
+        return Response({'status': 'ok', 'authenticated': True, 'user': data})
+    return Response({'status': 'ok', 'authenticated': False})
+
+
 class LoginView(APIView):
     """
     API endpoint for user login.

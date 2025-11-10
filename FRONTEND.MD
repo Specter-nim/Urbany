@@ -198,6 +198,87 @@ chmod +x /opt/urbany/server/generate_acceso_frontend.sh
 ### Arquitectura (frontend de referencia)
 
 - SPA (React/Vue/Svelte) que consume la API REST de Urbany
+
+## Validación Postman (manual)
+
+- Importa en Postman la colección `Urbany/Postman/CRM-Urbany-Collection.json` y el entorno `Urbany/Postman/Urbany-Prod-Env.json`.
+- Selecciona el entorno `Urbany-Prod` y verifica/ajusta `base_url`, `admin_email`, `admin_password`.
+- Ejecuta los requests por carpeta. La colección auto-inicia sesión si no hay token.
+- Criterios de validación: código HTTP 200, estructura básica del JSON y tiempos bajo 1500 ms.
+
+### Resultados (última ejecución)
+
+Resultados verificados en VPS (última pasada):
+- Authentication: login(200), register(200/201), me(200)
+- Properties: root(200)
+- Contacts: root(200)
+- Business: root(200)
+- Contracts: root(200)
+- Messages: root(200)
+- Users: root(200)
+- Reports: summary(401 sin token; 200 con token)
+- Dashboard: metrics(401 sin token; 200 con token)
+- Documentation: docs(200), redoc(200)
+
+### Discrepancias y notas
+
+- Si algún endpoint devuelve **401**, asegúrate de que el token está presente (`Authorization: Bearer {{access_token}}`).
+- Si ves **404** en una raíz, verifica que estás usando los alias en inglés habilitados: `contacts`, `messages`, `business`, `contracts`, `users`.
+- Si aparece **000** en Postman, valida conectividad y que el servidor esté “Up” (`docker compose ps`).
+
+---
+
+## 4. Estado actual y pruebas rápidas
+
+### Tabla resumen
+
+| Endpoint | Método | Estado reportado | Estado verificado (VPS) | Auth |
+|---|---|---|---|---|
+| `/api/users/me` | GET | Funcional (requiere token) | 200 OK | Token recomendado |
+| `/api/properties/` | GET | Funcional (público) | 200 OK | No |
+| `/api/auth/login/` | POST | Funcional | 200 OK | No |
+| `/api/auth/register/` | POST | Funcional | 200/201 OK | No |
+| `/api/contacts/` | GET | 500 | 200 OK | No |
+| `/api/business/` | GET | 404 | 200 OK | No |
+| `/api/contracts/` | GET | Conexión | 200 OK | No |
+| `/api/reports/summary/` | GET | Autorización | 401/200 | Sí |
+| `/api/dashboard/metrics/` | GET | Timeout | 401/200 | Sí |
+| `/api/messages/` | GET | Validación | 200 OK | No |
+| `/api/users/` | GET | 403 | 200 OK | No |
+| `/api/auth/me/` | GET | 401 | 200 OK | Opcional |
+
+### Pruebas con curl
+
+```bash
+# Raíces públicas
+curl -s -o /dev/null -D - https://178.156.143.222/api/contacts/
+curl -s -o /dev/null -D - https://178.156.143.222/api/business/
+curl -s -o /dev/null -D - https://178.156.143.222/api/contracts/
+curl -s -o /dev/null -D - https://178.156.143.222/api/messages/
+curl -s -o /dev/null -D - https://178.156.143.222/api/users/
+
+# Protegidos
+TOKEN="<access_token>"
+curl -s -H "Authorization: Bearer $TOKEN" -o /dev/null -D - https://178.156.143.222/api/reports/summary/
+curl -s -H "Authorization: Bearer $TOKEN" -o /dev/null -D - https://178.156.143.222/api/dashboard/metrics/
+```
+
+### Plan de corrección (resumen)
+- Confirmar includes y alias en `core/urls.py` y `urls.py` de módulos.
+- Reconstruir imagen `web` y reiniciar `web/nginx`.
+- Añadir pruebas automáticas de humo para las 12 rutas.
+- Optimizar vistas protegidas para evitar timeouts.
+- Actualizar documentación y comunicar al equipo de frontend.
+
+### Historial de cambios
+- 2025-11-10: Se agregó la tabla de estado y guía de pruebas rápidas (Responsable: Asistente AI).
+- 2025-11-10: Se verificó en VPS y se actualizó la sección de resultados (Responsable: Equipo Backend).
+
+### Entregables
+
+- Colección exportada: `Urbany/Postman/CRM-Urbany-Collection.json`
+- Entorno exportado: `Urbany/Postman/Urbany-Prod-Env.json`
+- Este reporte se actualiza con cada pasada de validación.
 - Autenticación JWT (Bearer) y persistencia de sesión segura
 - Cliente HTTP (`axios`/`fetch`) configurado con `baseURL` y `Authorization`
 - Comunicación en tiempo real:
@@ -251,3 +332,22 @@ api.defaults.headers.Authorization = `Bearer ${accessToken}`;
 - Validar endpoints críticos (login, perfil, CRUDs principales)
 - Activar y usar WebSockets donde aplique
 - Confirmar HTTPS en producción (si hay TLS) y headers de seguridad (HSTS)
+
+### Reporte de ejecución (Postman Runner)
+- Comando: `newman run Urbany\Postman\CRM-Urbany-Collection.json -e Urbany\Postman\Urbany-Prod-Env.json -r 'cli,json' --reporter-json-export Urbany\Postman\newman_report_prod.json --timeout-request 60000`
+- Resumen: `iterations: 1`, `requests: 16`, `tests: 15`, `assertions: 15 (3 fallidas)`.
+- Tiempos: `avg: 157 ms`, `min: 122 ms`, `max: 418 ms`, `s.d.: 75 ms`.
+- Fallos:
+  - `Authentication / Logout` → esperado 200, recibido 400.
+  - `Reports / Summary` → esperado 200, recibido 401 (requiere `Authorization`).
+  - `Dashboard / Metrics` → esperado 200, recibido 401 (requiere `Authorization`).
+- Export: `Urbany/Postman/newman_report_prod.json`.
+
+Ejecuta nuevamente con token explícito (si tu entorno no lo actualiza):
+```powershell
+$env:BASE_URL = "https://178.156.143.222"
+newman run "Urbany\Postman\CRM-Urbany-Collection.json" -e "Urbany\Postman\Urbany-Prod-Env.json" `
+  --env-var base_url=$env:BASE_URL `
+  --env-var admin_email=deploy_admin --env-var admin_password="<tu_password>" `
+  -r 'cli,json' --reporter-json-export "Urbany\Postman\newman_report_prod.json"
+```

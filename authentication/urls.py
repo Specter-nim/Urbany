@@ -6,7 +6,8 @@ from .views import (
     LogoutView,
     PasswordRecoveryView,
     TwoFactorAuthView,
-    health_check
+    health_check,
+    me_view
 )
 #from users.views import InmobiliariaRegistrationView
 
@@ -20,6 +21,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('password-recovery/', PasswordRecoveryView.as_view(), name='password_recovery'),
     path('two-factor/', TwoFactorAuthView.as_view(), name='two_factor_auth'),
+    path('me/', me_view, name='me'),
     
     # HU02: Inmobiliaria registration endpoint
     #path('register-inmobiliaria/', InmobiliariaRegistrationView.as_view(), name='register_inmobiliaria'),

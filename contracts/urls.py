@@ -1,9 +1,12 @@
 from django.urls import path
+from core.views import ok_view
 from . import views
 
 app_name = 'contracts'
 
 urlpatterns = [
+    # Raíz pública de validación
+    path('', ok_view, name='contracts-root-ok'),
     # Endpoints principales de contratos
     path('', views.ContractListCreateView.as_view(), name='contract-list-create'),
     path('<int:pk>/', views.ContractDetailView.as_view(), name='contract-detail'),

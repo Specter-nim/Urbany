@@ -19,9 +19,9 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
-      SECURE_SSL_REDIRECT: "true"
-      SESSION_COOKIE_SECURE: "true"
-      CSRF_COOKIE_SECURE: "true"
+      SECURE_SSL_REDIRECT: "false"
+      SESSION_COOKIE_SECURE: "false"
+      CSRF_COOKIE_SECURE: "false"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/docs/"]
       interval: 30s
